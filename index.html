@@ -1,22 +1,22 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-<meta charset="UTF-8">
-<title>PC28 测试</title>
-</head>
-<body>
+export default {
+  async fetch() {
+    const r = await fetch(
+      'https://pc28.help/kj.json?limit=60', // <-- 这里放链接
+      {
+        headers: {
+          'User-Agent': 'Mozilla/5.0',
+          'Accept': 'application/json'
+        },
+        cf: { cacheTtl: 0, cacheEverything: false }
+      }
+    );
 
-<button onclick="load()">加载数据</button>
-<pre id="out">未加载</pre>
-
-<script>
-async function load(){
-  const r = await fetch('【替换成你的 workers.dev 地址】');
-  const j = await r.json();
-  document.getElementById('out').textContent =
-    JSON.stringify(j.data.slice(0,3), null, 2);
-}
-</script>
-
-</body>
-</html>
+    return new Response(await r.text(), {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'no-store, no-cache, must-revalidate'
+      }
+    });
+  }
+};
